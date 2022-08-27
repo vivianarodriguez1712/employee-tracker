@@ -1,4 +1,13 @@
 const inquirer = require('inquirer');
+const mysql = require('mysql2');
+
+//////to run type source db/schema.sql; (in schema file)
+
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'test'
+  });
 
 inquirer
   .prompt([
