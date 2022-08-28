@@ -21,15 +21,41 @@ inquirer
   ])
   .then(answers => {
     console.info('Answer:', answers.options);
- 
+
  switch(answers.options) {
     case 'View all deptartments':
-      console.log('View all departments')//put the function call in here 
+      viewDept();  //put the function call in here 
       break;
     case 'View all roles':
       console.log('View all roles')
+      break;
+    case 'View all employees':
+      console.log('View all employees')
+      break;
+    case 'Add a department':
+      console.log('Add a departmetnt')
+      break;
+    case 'Add a role':
+      console.log('Add a role')
+      break;
+    case 'Add an employee':
+      console.log('Add an employee')
+      break;
+    case 'Update an employee role':
+      console.log('Update an employee role')
       break;
     default:
       // code block
   }
 });
+
+
+function viewDept() {
+    inquirer
+        .prompt(
+            {
+                type: 'list',
+                name: 'viewDepartments',
+                message: ['Sales', 'Finance', 'Customer Serice', 'exit']
+            }
+        )}
