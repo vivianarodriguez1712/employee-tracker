@@ -17,11 +17,13 @@ CREATE TABLE Role (
 
 CREATE TABLE Employee (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    role_id INT,
     first_name VARCHAR(30),
     last_name VARCHAR(30),
-    role_id INT,
-    manager_id INT,
-    FOREIGN KEY (role_id) REFERENCES Role(id),
-    FOREIGN KEY (manager_id) REFERENCES Employee(id)
+    job_title VARCHAR(30),
+    department VARCHAR(30),
+    salary DECIMAL,
+    manager VARCHAR(30),
+    FOREIGN KEY (role_id) REFERENCES Role(id)
 );
 
