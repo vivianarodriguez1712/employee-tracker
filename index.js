@@ -52,53 +52,32 @@ inquirer
 
 
 function viewDept() {
-    //  inquirer
-    //     .prompt([
-    //        {
-    //          type: 'list',
-    //          name: 'viewDepartments',
-    //          message: 'All current departments',
-    //          choices: ['Sales', 'Finance', 'Customer Serice', 'exit'],
-    //        },
-    //     ])       
-
-    //  .then(answers => {
-    //    console.info('Answer:', answers.viewDepartments);
-    //  }
-    // )
-    console.info('Sales', 'Finance', 'Customer Serice')
-}
+    connection.query(
+        'SELECT * FROM department',
+        function (err, results) {
+            console.table(results);
+        }
+    );
+ }    
 
 
 function viewRoles() {
-    // inquirer
-    //    .prompt([
-    //       {
-    //         type: 'list',
-    //         name: 'viewRoles',
-    //         message: 'All current roles',
-    // choices: ['Manager', 'Consultant', 'Casheir', 'exit'],
-    //       },
-    //    ])       
-
-    // .then(answers => {
-    console.info('Manager', 'Consultant', 'Casheir', 'exit');
+    connection.query(
+        'SELECT * FROM Role',
+        function (err, results) {
+            console.table(results);
+        }
+    );
 }
 //    )}
 
 function viewEmployees() {
-    // inquirer
-    //    .prompt([
-    //       {
-    //         type: 'list',
-    //         name: 'viewEmployees',
-    //         message: 'All current employees',
-    // choices: ['Ronald Brown', 'Sam Kelly', 'John Lee', 'exit'],
-    //       },
-    //    ])       
-
-    // .then(answers => {
-    console.info('Ronald Brown', 'Sam Kelly', 'John Lee', 'exit');
+    connection.query(
+        'SELECT * FROM Employee',
+        function (err, results) {
+            console.table(results);
+        }
+    );
 }
 //    )}
 
@@ -132,7 +111,7 @@ function addRole() {
         inquirer
             .prompt([
                 {
-                    name: 'title',
+                    name: 'job_title',
                     type: 'input',
                     message: "Enter the role"
                 },
@@ -149,9 +128,9 @@ function addRole() {
                 }
 
             ]).then(function ({ job_title, salary, department }) {
-                let index = department.indexOf(department)
-
-                connection.query(`INSERT INTO role (title, salary, department) VALUES ('${job_title}', '${salary}', ${index})`, function (err, data) {
+                let index = department.indexOf(department) + 1
+                console.log(typeof index)
+                connection.query(`INSERT INTO Role (title, salary, department_id) VALUES ('${job_title}', '${salary}', ${index})`, function (err, data) {
                     if (err) throw err;
                     console.log(`Added`)
                 })
@@ -193,27 +172,27 @@ function addEmployee() {
                         name: 'role_id',
                         type: 'list',
                         message: 'Enter the employees role',
-                        choices: role_id,
+                        choices: roles
                     },
                     {
                         name: 'manager',
                         type: 'list',
                         message: "Enter the employees manager",
-                        choices: ['none'].concat(employees)
+                        choices: ['null'].concat(employees)
                     }
 
                 ]).then(function ({ first_name, last_name, role_id, manager }) {
                     let queryText = `INSERT INTO employee (first_name, last_name, role_id`;
-                    if (manager != 'none') {
-                        queryText += `, manager) VALUES ('${first_name}', '${last_name}', ${roles.indexOf(role_id)}, ${employees.indexOf(manager) + 1})`
-                    } else {
-                        queryText += `) VALUES ('${first_name}', '${last_name}', ${roles.indexOf(role_id) + 1})`
-                    }
+                    // if (manager != 'none') {
+                    queryText += `, manager) VALUES ('${first_name}', '${last_name}', ${roles.indexOf(role_id) + 1}, ${manager})`
+                    // } else {
+                    //     queryText += `) VALUES ('${first_name}', '${last_name}', ${roles.indexOf(role_id) + 1})`
+                    // }
                     console.log(queryText)
 
                     connection.query(queryText, function (err, data) {
                         if (err) throw err;
-
+                        console.log('employee added')
                     })
                 })
 
@@ -246,13 +225,13 @@ function updateEmployee() {
                         name: 'employee_id',
                         type: 'list',
                         message: "Select which employee you want to update",
-                        choices: employee
+                        choices: employees
                     },
                     {
-                        name: 'role_id',
+                        name: 'roles',
                         type: 'list',
                         message: "Enter the employees new role",
-                        choices: role_id
+                        choices: roles
                     }
                 ]).then(function ({ employee, role_id }) {
                     connection.query(`UPDATE employee SET role_id = ${roles.indexOf(role_id) + 1} WHERE id = ${employees.indexOf(employee) + 1}`, function (err, data) {
